@@ -2,7 +2,6 @@ import json
 import os
 import numpy as np
 import dlib
-from pathlib import Path
 
 
 def get_config_from_file(filename):

@@ -3,7 +3,6 @@ import cv2 as cv
 from time import time
 from eye_preprocessor.utils import *
 from imutils import face_utils
-import os
 from pathlib import Path
 
 class EyePreprocessor:
