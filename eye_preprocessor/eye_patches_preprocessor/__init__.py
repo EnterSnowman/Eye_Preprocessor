@@ -4,7 +4,7 @@ from time import time
 from eye_preprocessor.utils import *
 from imutils import face_utils
 import os
-
+from pathlib import Path
 
 class EyePreprocessor:
     """
@@ -74,17 +74,17 @@ class EyePreprocessor:
 
         """
         if use_cache:
-            caches_filename = os.path.join(cache_dir, "caches.json")
+            caches_filename = Path(cache_dir, "caches.json")
             caches_file = get_caches_json_from_file(caches_filename)
             if video_filename in caches_file:
-                cache_filename = os.path.join(cache_dir, caches_file[video_filename])
+                cache_filename = Path(cache_dir, caches_file[video_filename])
                 faces_cache = load_face_cache(cache_filename)
                 number_of_cached_faces = faces_cache.shape[0]
             else:
                 cache_filename = str(time()) + '.npy'
 
                 add_new_cache_filename_to_caches_json(caches_filename, caches_file, video_filename, cache_filename)
-                cache_filename = os.path.join(cache_dir, cache_filename)
+                cache_filename = Path(cache_dir, cache_filename)
                 number_of_cached_faces = 0
 
         cap = cv.VideoCapture(video_filename)

@@ -2,6 +2,7 @@ import json
 import os
 import numpy as np
 import dlib
+from pathlib import Path
 
 
 def get_config_from_file(filename):
@@ -36,7 +37,7 @@ def get_caches_json_from_file(filename):
 
     Parameters
     ----------
-    filename : str
+    filename : pathlib.Path
         Path to file which contains list of caches. File must be instance of JSON document.
 
     Returns
@@ -44,13 +45,14 @@ def get_caches_json_from_file(filename):
     dict
         Dict, where key is filename of video, value is filename of saved numpy array for this video.
     """
-    if os.path.exists(filename):
-        with open(filename, encoding='utf-8') as data_file:
+    if filename.exists():
+        with filename.open() as data_file:
             data = json.loads(data_file.read())
         return data
     else:
         data = json.loads('{}')
-        with open(filename, 'w') as outfile:
+        filename.parent.mkdir(parents=True, exist_ok=True)
+        with filename.open(mode='w') as outfile:
             json.dump(data, outfile)
         return data
 
@@ -83,7 +85,7 @@ def load_face_cache(filename):
 
     Parameters
     ----------
-    filename : str
+    filename : pathlib.Path
         Path to file which contains numpy array
 
     Returns
