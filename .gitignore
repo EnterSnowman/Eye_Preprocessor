@@ -1,0 +1,9 @@
+venv/
+.idea/
+cache/
+data/
+models/
+sashka_cache/
+some_videos/
+process_dat_for_sashka.py
+sashka_conf.json

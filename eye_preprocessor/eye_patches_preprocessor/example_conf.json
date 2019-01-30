@@ -1,0 +1,5 @@
+{
+  "eye_width": 60,
+  "eye_height":36,
+  "path_to_landmark_predictor": "../models/shape_predictor_68_face_landmarks.dat"
+}
