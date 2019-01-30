@@ -24,6 +24,7 @@ class EyePreprocessor:
         Landmark predictor intended for eye recognizing.
 
     """
+
     def __init__(self, config_filename=None):
         """
 
@@ -149,7 +150,7 @@ class EyePreprocessor:
             if cached_rect[0] == 0:
                 return None
             else:
-                rect = list_to_dlib_rect(cached_rect[1:])
+                rect = list2dlib(cached_rect[1:])
         shape = self.predictor(frame, rect)
         shape = face_utils.shape_to_np(shape)
         left_eye_landmarks = shape[face_utils.FACIAL_LANDMARKS_68_IDXS["left_eye"][0]:
@@ -157,18 +158,33 @@ class EyePreprocessor:
         right_eye_landmarks = shape[face_utils.FACIAL_LANDMARKS_68_IDXS["right_eye"][0]:
                                     face_utils.FACIAL_LANDMARKS_68_IDXS["right_eye"][1]]
 
-        (x, y, w, h) = cv.boundingRect(left_eye_landmarks)
-        left_eye_roi = frame[y:y + h, x:x + w]
-        left_eye_roi = cv.resize(left_eye_roi, (self.eye_width, self.eye_height))
-        left_eye_roi = cv.equalizeHist(left_eye_roi)
+        left_eye_roi = self.__get_eye_patch(left_eye_landmarks, frame)
+        right_eye_roi = self.__get_eye_patch(right_eye_landmarks, frame)
 
-        (x, y, w, h) = cv.boundingRect(right_eye_landmarks)
-        right_eye_roi = frame[y:y + h, x:x + w]
-        right_eye_roi = cv.resize(right_eye_roi, (self.eye_width, self.eye_height))
-        right_eye_roi = cv.equalizeHist(right_eye_roi)
-        # result.append()
+        return [dlib2list(rect), left_eye_roi, right_eye_roi]
 
-        return [dlib_rect_to_list(rect), left_eye_roi, right_eye_roi]
+    def __get_eye_patch(self, eye_landmarks, frame):
+        """
+
+        Crops eye patch from given frame and eye landmarks
+
+        Parameters
+        ----------
+        eye_landmarks : ndarray
+            Array with shape (num_eye_landmarks, 2) with eye landmark positions.
+        frame : ndarray
+            Frame with recognized eye
+
+        Returns
+        -------
+        eye_roi : ndarray
+            Resulted eye patch
+        """
+        (x, y, w, h) = cv.boundingRect(eye_landmarks)
+        eye_roi = frame[y:y + h, x:x + w]
+        eye_roi = cv.resize(eye_roi, (self.eye_width, self.eye_height))
+        eye_roi = cv.equalizeHist(eye_roi)
+        return eye_roi
 
 
 if __name__ == "__main__":

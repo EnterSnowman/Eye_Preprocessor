@@ -116,7 +116,7 @@ def add_face_to_saved_numpy_array(face, array_filename):
         np.save(array_filename, face)
 
 
-def dlib_rect_to_list(rect):
+def dlib2list(rect):
     """
 
     Converts dlib.rectangle object to list
@@ -134,7 +134,7 @@ def dlib_rect_to_list(rect):
     return [rect.left(), rect.top(), rect.right(), rect.bottom()]
 
 
-def list_to_dlib_rect(rlist):
+def list2dlib(rlist):
     """
 
     Converts list to dlib.rectagle object
@@ -153,5 +153,5 @@ def list_to_dlib_rect(rlist):
 
 
 if __name__ == "__main__":
-    pass
+    list_rect = [20, 20]
 
