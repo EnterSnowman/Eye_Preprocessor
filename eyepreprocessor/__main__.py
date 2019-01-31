@@ -27,7 +27,7 @@ def main():
     elif args.video_folder is None:
         print("Input path to folder with videos")
     else:
-        from eyepreprocessor.eye_patches_preprocessor import EyePreprocessor
+        from eyepreprocessor.patches_preprocessor import EyePreprocessor
         ep = EyePreprocessor(args.config_file)
         ep.get_and_save_patches_from_all_videos_in_folder(args.video_folder, use_cache=args.use_cache)
 
