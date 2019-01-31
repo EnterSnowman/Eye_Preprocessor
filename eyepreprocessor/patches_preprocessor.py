@@ -203,7 +203,8 @@ class EyePreprocessor:
         """
 
         Applies self.get_patches_from_video to all videos in given folder, and saves eye patches in the new directory
-        for each video.
+        for each video. If any video found, in the same directory will be created /eyes directory, where will be created
+        directories for all founded videos in parent directory.
 
         Parameters
         ----------
