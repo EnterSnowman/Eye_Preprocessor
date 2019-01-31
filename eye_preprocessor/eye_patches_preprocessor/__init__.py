@@ -190,9 +190,7 @@ class EyePreprocessor:
             Resulted eye patch
         """
         (x, y, w, h) = cv.boundingRect(eye_landmarks)
-        padding = 0
-        if self.padding_ratio > 0.:
-            padding = int(self.padding_ratio * h)
+        padding = int(self.padding_ratio * h)
         eye_roi = frame[y - padding:y + h + padding, x - padding:x + w + padding]
         if self.eye_height > 0 and self.eye_width > 0:
             eye_roi = cv.resize(eye_roi, (self.eye_width, self.eye_height))
