@@ -2,7 +2,7 @@ import json
 import os
 import numpy as np
 import dlib
-
+from pathlib import Path
 
 def get_config_from_file(filename):
     """
@@ -153,6 +153,12 @@ def list2dlib(rlist):
     return dlib.rectangle(left=rlist[0], top=rlist[1], right=rlist[2], bottom=rlist[3])
 
 
-if __name__ == "__main__":
-    list_rect = [20, 20]
+def get_all_video_filenames_from_folder(folder, video_formats=['.mp4', '.avi']):
+    result = []
+    for f in video_formats:
+        result.extend(list(folder.glob("**/*"+f)))
+    return result
 
+
+if __name__ == "__main__":
+    print(type(get_all_video_filenames_from_folder(Path("../../some_videos"))[0]))

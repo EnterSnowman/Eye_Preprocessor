@@ -5,6 +5,7 @@ from eye_preprocessor.utils import *
 from imutils import face_utils
 from pathlib import Path
 
+
 class EyePreprocessor:
     """
 
@@ -40,11 +41,14 @@ class EyePreprocessor:
             print(conf)
             self.eye_width = conf['eye_width']
             self.eye_height = conf['eye_height']
+            self.equalizeHist = conf['equalizeHist']
             predictor_path = conf['path_to_landmark_predictor']
         else:
             predictor_path = "models/shape_predictor_68_face_landmarks.dat"
-            self.eye_width = 60
-            self.eye_height = 36
+            self.eye_width = 0
+            self.eye_height = 0
+            self.equalizeHist = True
+
         self.detector = dlib.get_frontal_face_detector()
         self.predictor = dlib.shape_predictor(predictor_path)
         print(type(self.detector))
@@ -64,7 +68,8 @@ class EyePreprocessor:
         use_cache : bool
             If True, will be used available cache for given video file
         cache_dir : str
-            Path to directory which contains cache JSON document with list of saved caches and those saved caches.
+            Path to directory which contains cache JSON document with list of saved caches and those saved caches. JSON
+            document must be named "caches.json"
 
         Yields
         -------
@@ -181,9 +186,42 @@ class EyePreprocessor:
         """
         (x, y, w, h) = cv.boundingRect(eye_landmarks)
         eye_roi = frame[y:y + h, x:x + w]
-        eye_roi = cv.resize(eye_roi, (self.eye_width, self.eye_height))
-        eye_roi = cv.equalizeHist(eye_roi)
+        if self.eye_height > 0 or self.eye_width > 0:
+            eye_roi = cv.resize(eye_roi, (self.eye_width, self.eye_height))
+        if self.equalizeHist:
+            eye_roi = cv.equalizeHist(eye_roi)
         return eye_roi
+
+    def get_and_save_patches_from_all_videos_in_folder(self, folder, use_cache=True):
+        """
+
+        Parameters
+        ----------
+        folder
+
+        Returns
+        -------
+
+        """
+        videos = get_all_video_filenames_from_folder(Path(folder))
+        if len(videos) > 0:
+            cache_dir = Path(folder, 'cache')
+            for video_name in videos:
+                print(video_name)
+                video_patches_folder = Path(video_name.parent, video_name.name.split(".")[0])
+
+                left_eye_patch_folder = Path(video_patches_folder, "left_eye")
+                right_eye_patch_folder = Path(video_patches_folder, "right_eye")
+
+                left_eye_patch_folder.mkdir(parents=True, exist_ok=True)
+                right_eye_patch_folder.mkdir(parents=True, exist_ok=True)
+                print(str(left_eye_patch_folder))
+                number_of_patch = 0
+                for patches in self.get_patches_from_video(str(video_name), use_cache=use_cache,
+                                                           cache_dir=str(cache_dir)):
+                    cv.imwrite(str(left_eye_patch_folder / (str(number_of_patch) + ".png")), patches[0])
+                    cv.imwrite(str(right_eye_patch_folder / (str(number_of_patch) + ".png")), patches[1])
+                    number_of_patch += 1
 
 
 if __name__ == "__main__":
