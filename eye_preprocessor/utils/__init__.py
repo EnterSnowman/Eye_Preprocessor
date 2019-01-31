@@ -154,6 +154,22 @@ def list2dlib(rlist):
 
 
 def get_all_video_filenames_from_folder(folder, video_formats=['.mp4', '.avi']):
+    """
+
+    Search all video files with given formats in given folder
+
+    Parameters
+    ----------
+    folder : pathlib.Path
+        Object that represents folder with videos.
+    video_formats : list of str
+        List of video formats, which must be proceeded.
+
+    Returns
+    -------
+    result : list of pathlib.Path
+        List of pathes of all video files in given folder
+    """
     result = []
     for f in video_formats:
         result.extend(list(folder.glob("**/*"+f)))

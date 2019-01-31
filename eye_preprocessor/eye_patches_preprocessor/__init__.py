@@ -22,7 +22,10 @@ class EyePreprocessor:
         Default dlib face detector
     predictor : dlib.shape_predictor
         Landmark predictor intended for eye recognizing.
-
+    equalize_hist : bool
+        If True, resulted grayscale eye patch histogram will be equalized
+    padding_ratio : float
+        Ratio of eye roi height, that will be used as padding
     """
 
     def __init__(self, config_filename=None):
@@ -41,13 +44,15 @@ class EyePreprocessor:
             print(conf)
             self.eye_width = conf['eye_width']
             self.eye_height = conf['eye_height']
-            self.equalizeHist = conf['equalizeHist']
+            self.equalize_hist = conf['equalize_hist']
+            self.padding_ratio = conf['padding_ratio']
             predictor_path = conf['path_to_landmark_predictor']
         else:
             predictor_path = "models/shape_predictor_68_face_landmarks.dat"
             self.eye_width = 0
             self.eye_height = 0
-            self.equalizeHist = True
+            self.padding_ratio = 0.
+            self.equalize_hist = True
 
         self.detector = dlib.get_frontal_face_detector()
         self.predictor = dlib.shape_predictor(predictor_path)
@@ -185,21 +190,29 @@ class EyePreprocessor:
             Resulted eye patch
         """
         (x, y, w, h) = cv.boundingRect(eye_landmarks)
-        eye_roi = frame[y:y + h, x:x + w]
-        if self.eye_height > 0 or self.eye_width > 0:
+        padding = 0
+        if self.padding_ratio > 0.:
+            padding = int(self.padding_ratio * h)
+        eye_roi = frame[y - padding:y + h + padding, x - padding:x + w + padding]
+        if self.eye_height > 0 and self.eye_width > 0:
             eye_roi = cv.resize(eye_roi, (self.eye_width, self.eye_height))
-        if self.equalizeHist:
+        if self.equalize_hist:
             eye_roi = cv.equalizeHist(eye_roi)
         return eye_roi
 
     def get_and_save_patches_from_all_videos_in_folder(self, folder, use_cache=True):
         """
 
+        Applies self.get_patches_from_video to all videos in given folder, and saves eye patches in the new directory
+        for each video.
+
         Parameters
         ----------
-        folder
+        folder : str
+            Path to folder, which contains videos
+        use_cache : bool
+            If True, available cache for videos will be used or create new one.
 
-        Returns
         -------
 
         """
