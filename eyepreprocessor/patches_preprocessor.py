@@ -89,9 +89,10 @@ class EyePreprocessor:
                 cache_filename = Path(cache_dir, caches_file[video_filename])
                 faces_cache = load_face_cache(cache_filename)
                 number_of_cached_faces = faces_cache.shape[0]
+                print("Cache for video", video_filename, "loaded. Number of cache frames:", number_of_cached_faces)
             else:
                 cache_filename = str(time()) + '.npy'
-
+                print("Cache for video", video_filename, "created.")
                 add_new_cache_filename_to_caches_json(caches_filename, caches_file, video_filename, cache_filename)
                 cache_filename = Path(cache_dir, cache_filename)
                 number_of_cached_faces = 0
@@ -215,24 +216,29 @@ class EyePreprocessor:
 
         """
         videos = get_all_video_filenames_from_folder(Path(folder))
+        num_video = 1
         if len(videos) > 0:
             cache_dir = Path(folder, 'cache')
             for video_name in videos:
-                print(video_name)
-                video_patches_folder = Path(video_name.parent, video_name.name.split(".")[0])
+                print(video_name, "processing.")
+                print("File", num_video, "from", len(videos))
+                video_patches_folder = Path(video_name.parent, "eyes", video_name.name.split(".")[0])
 
                 left_eye_patch_folder = Path(video_patches_folder, "left_eye")
                 right_eye_patch_folder = Path(video_patches_folder, "right_eye")
 
                 left_eye_patch_folder.mkdir(parents=True, exist_ok=True)
                 right_eye_patch_folder.mkdir(parents=True, exist_ok=True)
-                print(str(left_eye_patch_folder))
                 number_of_patch = 0
                 for patches in self.get_patches_from_video(str(video_name), use_cache=use_cache,
                                                            cache_dir=str(cache_dir)):
                     cv.imwrite(str(left_eye_patch_folder / (str(number_of_patch) + ".png")), patches[0])
                     cv.imwrite(str(right_eye_patch_folder / (str(number_of_patch) + ".png")), patches[1])
                     number_of_patch += 1
+                print("")
+                num_video += 1
+        else:
+            print("No videos =(")
 
 
 if __name__ == "__main__":
