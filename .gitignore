@@ -1,6 +1,7 @@
 /*
 
-!eye_preprocessor/*.py
-!eye_preprocessor/*/*.py
+!eye_preprocessor
 !requirements.txt
 !setup.py
+
+*.pyc
