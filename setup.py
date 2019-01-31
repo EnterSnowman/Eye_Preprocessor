@@ -1,11 +1,11 @@
 from setuptools import setup
 
-setup(name="eye_preprocessor",
+setup(name='eyepreprocessor',
       version="0.1",
-      packages=['eye_preprocessor'],
+      packages=['eyepreprocessor'],
       entry_points={
           'console_scripts': [
-              'eye_preprocessor=eye_preprocessor.__main__:main'
+              'eyepreprocessor=eyepreprocessor.__main__:main'
           ]
       }
       )
