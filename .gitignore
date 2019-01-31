@@ -1,8 +1,6 @@
 /*
 
-!eye_preprocessor/
+!eye_preprocessor/*.py
+!eye_preprocessor/*/*.py
 !requirements.txt
 !setup.py
-
-eye_preprocessor/eye_patches_preprocessor/__pycache__
-eye_preprocessor/utils/__pycache__
