@@ -13,8 +13,8 @@ def get_argument_parser():
     Eye preprocessor designed for eye patches extracting from videos, using dlib and opencv.
     """
     parser = argparse.ArgumentParser(description=description)
-    parser.add_argument("--config-file", type=str, help=config_file_help)
-    parser.add_argument("--video-folder", type=str, help=video_folder_help)
+    parser.add_argument("--config-file", type=str, help=config_file_help, default="eyepreprocessor\example_conf.json")
+    parser.add_argument("--video-folder", type=str, help=video_folder_help, default="data")
     parser.add_argument("--use-cache", type=str, default=True, help=use_cache_help)
     args = parser.parse_args()
     return args

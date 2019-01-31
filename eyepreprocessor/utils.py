@@ -150,7 +150,8 @@ def list2dlib(rlist):
     dlib.rectangle
 
     """
-    return dlib.rectangle(left=rlist[0], top=rlist[1], right=rlist[2], bottom=rlist[3])
+
+    return dlib.rectangle(left=int(rlist[0]), top=int(rlist[1]), right=int(rlist[2]), bottom=int(rlist[3]))
 
 
 def get_all_video_filenames_from_folder(folder, video_formats=['.mp4', '.avi']):
